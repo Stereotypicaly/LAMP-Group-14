@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacts &mdash; Sign in</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <main class="card">
+    <div class="card__tab">Contacts</div>
+
+    <div class="card__holes" aria-hidden="true">
+      <span class="hole"></span>
+      <span class="hole"></span>
+      <span class="hole"></span>
+    </div>
+
+    <p class="card__intro">Create an Account</p>
+
+    <form class="card__form" action="login.php" method="post">
+
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </div>
+
+      <button type="submit" class="card__submit">Register Account</button>
+
+      <a class="card__forgot" href="login.html">Sign in</a>
+
+    </form>
+  </main>
+
+</body>
+</html>

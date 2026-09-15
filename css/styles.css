@@ -1,0 +1,188 @@
+/* ---------------------------------------------
+   Tokens
+--------------------------------------------- */
+:root {
+  --paper: #F6F1E7;
+  --paper-edge: #EDE6D6;
+  --ink: #26251F;
+  --ink-soft: #6B6558;
+  --rule: #D9CFB8;
+  --clay: #C1502E;
+  --clay-dark: #A5401F;
+  --teal: #1F3A3D;
+
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --mono: ui-monospace, "SF Mono", Menlo, "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 48px 20px;
+  background: var(--paper-edge);
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px);
+  background-size: 100% 32px;
+  font-family: var(--mono);
+  color: var(--ink);
+}
+
+/* ---------------------------------------------
+   The card
+--------------------------------------------- */
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(38, 37, 31, 0.04);
+  padding: 56px 40px 40px;
+  margin-top: 28px;
+}
+
+.card__tab {
+  position: absolute;
+  top: -28px;
+  left: 32px;
+  background: var(--clay);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: 19px;
+  letter-spacing: 0.01em;
+  padding: 7px 20px 8px;
+  border-radius: 4px 4px 0 0;
+}
+
+.card__holes {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  display: flex;
+  gap: 10px;
+}
+
+.hole {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--paper-edge);
+  border: 1px solid var(--teal);
+  display: block;
+}
+
+.card__intro {
+  margin: 0 0 32px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ---------------------------------------------
+   Form
+--------------------------------------------- */
+.card__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.field {
+  margin-bottom: 26px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+
+.field input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  padding: 6px 2px 10px;
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--ink);
+  outline-offset: 4px;
+}
+
+.field input::placeholder {
+  color: #B7AF9A;
+}
+
+.field input:focus {
+  border-bottom-color: var(--clay);
+}
+
+.field input:focus-visible {
+  outline: 2px solid var(--clay);
+}
+
+.card__submit {
+  margin-top: 8px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 3px;
+  background: var(--clay);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.card__submit:hover {
+  background: var(--clay-dark);
+}
+
+.card__submit:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.card__forgot {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.card__forgot:hover {
+  color: var(--clay);
+  text-decoration: underline;
+}
+
+/* ---------------------------------------------
+   Small screens
+--------------------------------------------- */
+@media (max-width: 420px) {
+  .card {
+    padding: 52px 24px 32px;
+  }
+}
+
+/* ---------------------------------------------
+   Reduced motion
+--------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .card__submit {
+    transition: none;
+  }
+}
