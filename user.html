@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacts &mdash; My Contacts</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <main class="dashboard">
+    <div class="dashboard__tab">Contacts</div>
+    <div class="card__holes" aria-hidden="true">
+      <span class="hole"></span><span class="hole"></span><span class="hole"></span>
+    </div>
+
+    <header class="dashboard__header">
+      <div>
+        <p class="dashboard__eyebrow">My address book.</p>
+        <h1>My Contacts.</h1>
+      </div>
+      <div class="dashboard__header-actions">
+        <a href="create-contact.html" class="button button--add" aria-label="Add a contact">+</a>
+        <button type="button" id="sign-out-button" class="button button--secondary">Sign out</button>
+      </div>
+    </header>
+
+    <section aria-labelledby="contacts-heading">
+      <h2 id="contacts-heading" class="sr-only">My contacts</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">First name</th><th scope="col">Last name</th><th scope="col">Email</th>
+              <th scope="col">Phone</th><th scope="col">Created</th><th scope="col">Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="6">Loading contacts...</td></tr>
+          </tbody>
+        </table>
+        <p id="contacts-message" class="form-message" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/user.js"></script>
+</body>
+</html>

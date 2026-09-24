@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contacts &mdash; Register</title>
+  <title>Contacts &mdash; Create Contact</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-  <main class="card">
+  <main class="card card--form-page">
     <div class="card__tab">Contacts</div>
 
     <div class="card__holes" aria-hidden="true">
@@ -17,10 +17,9 @@
       <span class="hole"></span>
     </div>
 
-    <p class="card__intro">Create an Account</p>
+    <p class="card__intro">Create a contact</p>
 
-    <form class="card__form" id="register-form">
-
+    <form class="card__form" id="create-contact-form">
       <div class="field">
         <label for="first-name">First name</label>
         <input type="text" id="first-name" name="firstName" autocomplete="given-name" required maxlength="50">
@@ -32,24 +31,21 @@
       </div>
 
       <div class="field">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" autocomplete="username" required maxlength="50">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="emailAddress" autocomplete="email" required maxlength="50">
       </div>
 
       <div class="field">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" autocomplete="new-password" required>
+        <label for="phone">Phone number</label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel" required maxlength="20">
       </div>
 
-      <button type="submit" class="card__submit">Register Account</button>
-
-      <p id="register-message" class="form-message" aria-live="polite"></p>
-
-      <a class="card__forgot" href="index.html">Sign in</a>
-
+      <button type="submit" class="card__submit">Save contact</button>
+      <p id="create-contact-message" class="form-message" aria-live="polite"></p>
+      <a class="card__forgot" href="user.html">Cancel</a>
     </form>
   </main>
 
-  <script src="js/register.js"></script>
+  <script src="js/create-contact.js"></script>
 </body>
 </html>

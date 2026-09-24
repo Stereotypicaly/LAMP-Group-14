@@ -19,7 +19,7 @@
 
     <p class="card__intro">Sign in</p>
 
-    <form class="card__form" action="login.php" method="post">
+    <form class="card__form" id="login-form">
 
       <div class="field">
         <label for="username">Username</label>
@@ -33,10 +33,13 @@
 
       <button type="submit" class="card__submit">Sign in</button>
 
+      <p id="login-message" class="form-message" aria-live="polite"></p>
+
       <a class="card__forgot" href="register.html">Register an Account</a>
 
     </form>
   </main>
 
+  <script src="js/login.js"></script>
 </body>
 </html>

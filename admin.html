@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacts &mdash; Admin</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <main class="dashboard">
+    <div class="dashboard__tab">Contacts</div>
+    <div class="card__holes" aria-hidden="true">
+      <span class="hole"></span><span class="hole"></span><span class="hole"></span>
+    </div>
+
+    <header class="dashboard__header">
+      <div>
+        <p class="dashboard__eyebrow">Administrator</p>
+        <h1>Users</h1>
+        <p class="dashboard__intro">View and manage registered accounts.</p>
+      </div>
+      <!-- Connect this button to your logout code later. -->
+      <button type="button" class="button button--secondary">Sign out</button>
+    </header>
+
+    <section aria-labelledby="users-heading">
+      <h2 id="users-heading" class="sr-only">Registered users</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th><th scope="col">First name</th><th scope="col">Last name</th>
+              <th scope="col">Username</th><th scope="col">Created</th><th scope="col">Updated</th><th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Replace these example rows with users returned by your PHP/MySQL code. -->
+            <tr>
+              <td>1</td><td>Jane</td><td>Doe</td><td>janedoe</td><td>2026-09-01</td><td>2026-09-01</td>
+              <td class="table-actions"><button type="button" class="button button--small">Reset password</button><button type="button" class="button button--small button--danger">Remove</button></td>
+            </tr>
+            <tr>
+              <td>2</td><td>John</td><td>Smith</td><td>johnsmith</td><td>2026-09-03</td><td>2026-09-10</td>
+              <td class="table-actions"><button type="button" class="button button--small">Reset password</button><button type="button" class="button button--small button--danger">Remove</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>
