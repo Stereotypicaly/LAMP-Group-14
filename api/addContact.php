@@ -5,52 +5,90 @@ require_once __DIR__ . '/config/helpers.php';
 
 setCORSHeaders();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    respond(405, ['error' => 'Method not allowed']);
+if (!isset($_SERVER['REQUEST_METHOD'])) {
+    respond(400, ['error' => 'Invalid request method']);
 }
 
-$userId = requireActiveAuth();
-$body = getRequestBody();
-$firstName = clean($body['FirstName'] ?? $body['firstName'] ?? '');
-$lastName = clean($body['LastName'] ?? $body['lastName'] ?? '');
-$emailAddress = clean($body['emailAddress'] ?? $body['email'] ?? '');
-$phoneInput = clean($body['phone'] ?? '');
-$phone = normalizePhoneNumber($phoneInput);
+$method = $_SERVER['REQUEST_METHOD'];
 
-if (!$firstName || !$lastName || !$emailAddress || !$phoneInput) {
-    respond(400, ['error' => 'First name, last name, email, and phone are required']);
-}
+$userId = requireAuth();
+$db = getDB();
 
-if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
-    respond(400, ['error' => 'Invalid email format']);
-}
+if ($method === 'POST') {
 
-if ($phone === null) {
-    respond(400, ['error' => 'Enter a valid 10-digit phone number']);
-}
+    $body = getRequestBody();
 
-try {
-    $db = getDB();
-    $stmt = $db->prepare(
-        'INSERT INTO Contacts (UserID, FirstName, LastName, EmailAddress, Phone)
-         VALUES (:userId, :firstName, :lastName, :emailAddress, :phone)'
-    );
-    $stmt->execute([
-        ':userId' => $userId,
-        ':firstName' => $firstName,
-        ':lastName' => $lastName,
-        ':emailAddress' => $emailAddress,
-        ':phone' => $phone
+    if (
+        !isset($body['FirstName']) ||
+        !isset($body['LastName']) ||
+        !isset($body['email']) ||
+        !isset($body['phone'])
+    ) {
+
+        respond(400, [
+            'error' => 'First name, last name, email, and phone are required'
+        ]);
+    }
+
+    $FirstName = clean($body['FirstName']);
+    $LastName = clean($body['LastName']);
+    $email = clean($body['email']);
+    $phone = clean($body['phone']);
+    $category = isset($body['category']) ? clean($body['category']) : null;
+    $favorite = isset($body['favorite']) ? filter_var($body['favorite'], FILTER_VALIDATE_BOOLEAN) : false;
+
+    if (!$FirstName || !$LastName || !$email || !$phone) {
+
+        respond(400, [
+            'error' => 'First name, last name, email, and phone cannot be empty'
+        ]);
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+        respond(400, [
+            'error' => 'Invalid email format'
+        ]);
+    }
+
+    try {
+
+        $stmt = $db->prepare(
+            //has to be the same as the table name in the database and the column names have to match the database column names
+            'INSERT INTO Contacts (UserID, FirstName, LastName, Email, Phone, Category, Favorite)
+             VALUES (:userId, :firstName, :lastName, :email, :phone, :category, :favorite)'
+        );
+
+        $stmt->execute([
+            ':userId' => $userId,
+            ':firstName' => $FirstName,
+            ':lastName' => $LastName,
+            ':email' => $email,
+            ':phone' => $phone,
+            ':category' => $category,
+            ':favorite' => $favorite ? 1 : 0
+        ]);
+
+        respond(201, [
+            'message' => 'Contact added successfully',
+            'contactId' => $db->lastInsertId(),
+            'firstName' => $FirstName,
+            'lastName' => $LastName,
+            'email' => $email,
+            'phone' => $phone,
+            'category' => $category,
+            'favorite' => $favorite
+        ]);
+
+    } catch (PDOException $e) {
+
+        respond(500, [
+            'error' => 'Failed to add contact'
+        ]);
+    }
+} else {
+
+    respond(405, [
+        'error' => 'Method not allowed'
     ]);
-
-    respond(201, [
-        'message' => 'Contact added successfully',
-        'contactId' => (int) $db->lastInsertId(),
-        'firstName' => $firstName,
-        'lastName' => $lastName,
-        'email' => $emailAddress,
-        'phone' => $phone
-    ]);
-} catch (PDOException $e) {
-    respond(500, ['error' => 'Failed to add contact']);
 }
