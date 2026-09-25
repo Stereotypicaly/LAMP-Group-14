@@ -9,19 +9,20 @@
 <body>
 
   <main class="dashboard">
-    <div class="dashboard__tab">Contacts</div>
+    <div class="dashboard__tab">Administrator</div>
     <div class="card__holes" aria-hidden="true">
       <span class="hole"></span><span class="hole"></span><span class="hole"></span>
     </div>
 
     <header class="dashboard__header">
       <div>
-        <p class="dashboard__eyebrow">Administrator</p>
         <h1>Users</h1>
         <p class="dashboard__intro">View and manage registered accounts.</p>
       </div>
-      <!-- Connect this button to your logout code later. -->
-      <button type="button" class="button button--secondary">Sign out</button>
+      <div class="dashboard__header-actions">
+        <a href="create-user.html" class="button button--add" aria-label="Create a user">+</a>
+        <button type="button" id="sign-out-button" class="button button--secondary">Sign out</button>
+      </div>
     </header>
 
     <section aria-labelledby="users-heading">
@@ -35,20 +36,27 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Replace these example rows with users returned by your PHP/MySQL code. -->
-            <tr>
-              <td>1</td><td>Jane</td><td>Doe</td><td>janedoe</td><td>2026-09-01</td><td>2026-09-01</td>
-              <td class="table-actions"><button type="button" class="button button--small">Reset password</button><button type="button" class="button button--small button--danger">Remove</button></td>
-            </tr>
-            <tr>
-              <td>2</td><td>John</td><td>Smith</td><td>johnsmith</td><td>2026-09-03</td><td>2026-09-10</td>
-              <td class="table-actions"><button type="button" class="button button--small">Reset password</button><button type="button" class="button button--small button--danger">Remove</button></td>
-            </tr>
+            <tr><td colspan="7">Loading users...</td></tr>
           </tbody>
         </table>
+        <p id="users-message" class="form-message" aria-live="polite"></p>
       </div>
     </section>
   </main>
 
+  <dialog id="reset-password-dialog" class="reset-password-dialog" aria-labelledby="reset-password-heading">
+    <form id="reset-password-form" method="dialog">
+      <h2 id="reset-password-heading">Reset password</h2>
+      <p id="reset-password-user" class="dashboard__intro"></p>
+      <label for="new-password">New password</label>
+      <input id="new-password" name="newPassword" type="password" required autocomplete="new-password">
+      <div class="dialog-actions">
+        <button type="button" id="cancel-reset-button" class="button button--secondary">Cancel</button>
+        <button type="submit" class="button">Reset password</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/admin.js"></script>
 </body>
 </html>

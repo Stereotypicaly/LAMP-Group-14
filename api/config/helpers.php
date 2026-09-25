@@ -151,6 +151,32 @@ function clean($data)
     return $data;
 }
 
+/**
+ * Converts a US phone number to its ten-digit storage format.
+ */
+function normalizePhoneNumber($phone)
+{
+    if (!is_string($phone)) {
+        return null;
+    }
+
+    $phone = trim($phone);
+
+    // Allow common phone punctuation, but reject letters and extensions.
+    if ($phone === '' || !preg_match('/^\\+?[0-9\\s().-]+$/', $phone)) {
+        return null;
+    }
+
+    $digits = preg_replace('/\\D/', '', $phone);
+
+    // Accept an optional US country code, then store only ten digits.
+    if (strlen($digits) === 11 && $digits[0] === '1') {
+        $digits = substr($digits, 1);
+    }
+
+    return strlen($digits) === 10 ? $digits : null;
+}
+
 
 /**
  * Requires a logged-in PHP session and returns User ID.

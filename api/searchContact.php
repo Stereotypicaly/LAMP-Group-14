@@ -19,21 +19,25 @@ if (!$searchTerm) {
 
 try {
     $search = '%' . $searchTerm . '%';
+    $phoneSearchTerm = preg_replace('/\D/', '', $searchTerm);
+    $phoneSearch = '%' . $phoneSearchTerm . '%';
     $stmt = getDB()->prepare(
-        'SELECT ID AS contactId, FirstName AS firstName, LastName AS lastName,
-                EmailAddress AS email, Phone AS phone
+        'SELECT ID, FirstName, LastName, EmailAddress, Phone, DateCreated, DateUpdated
          FROM Contacts
          WHERE UserID = :userId AND (
              FirstName LIKE :firstNameSearch OR LastName LIKE :lastNameSearch OR
-             EmailAddress LIKE :emailSearch OR Phone LIKE :phoneSearch
-         )'
+             EmailAddress LIKE :emailSearch OR
+             (:hasPhoneSearch = 1 AND Phone LIKE :phoneSearch)
+         )
+         ORDER BY LastName ASC, FirstName ASC, ID ASC'
     );
     $stmt->execute([
         ':userId' => $userId,
         ':firstNameSearch' => $search,
         ':lastNameSearch' => $search,
         ':emailSearch' => $search,
-        ':phoneSearch' => $search
+        ':hasPhoneSearch' => $phoneSearchTerm === '' ? 0 : 1,
+        ':phoneSearch' => $phoneSearch
     ]);
     respond(200, ['contacts' => $stmt->fetchAll()]);
 } catch (PDOException $e) {

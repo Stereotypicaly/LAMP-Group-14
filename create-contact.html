@@ -37,7 +37,7 @@
 
       <div class="field">
         <label for="phone">Phone number</label>
-        <input type="tel" id="phone" name="phone" autocomplete="tel" required maxlength="20">
+        <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" required maxlength="25" pattern="[0-9+(). -]+" title="Enter a valid 10-digit phone number.">
       </div>
 
       <button type="submit" class="card__submit">Save contact</button>

@@ -15,18 +15,23 @@ $contactId = $body['contactId'] ?? null;
 $firstName = clean($body['FirstName'] ?? $body['firstName'] ?? '');
 $lastName = clean($body['LastName'] ?? $body['lastName'] ?? '');
 $emailAddress = clean($body['emailAddress'] ?? $body['email'] ?? '');
-$phone = clean($body['phone'] ?? '');
+$phoneInput = clean($body['phone'] ?? '');
+$phone = normalizePhoneNumber($phoneInput);
 
 if (!is_numeric($contactId) || (int) $contactId <= 0) {
     respond(400, ['error' => 'Invalid contact ID']);
 }
 
-if (!$firstName || !$lastName || !$emailAddress || !$phone) {
+if (!$firstName || !$lastName || !$emailAddress || !$phoneInput) {
     respond(400, ['error' => 'Contact ID, first name, last name, email, and phone cannot be empty']);
 }
 
 if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
     respond(400, ['error' => 'Invalid email format']);
+}
+
+if ($phone === null) {
+    respond(400, ['error' => 'Enter a valid 10-digit phone number']);
 }
 
 try {

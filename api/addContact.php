@@ -14,14 +14,19 @@ $body = getRequestBody();
 $firstName = clean($body['FirstName'] ?? $body['firstName'] ?? '');
 $lastName = clean($body['LastName'] ?? $body['lastName'] ?? '');
 $emailAddress = clean($body['emailAddress'] ?? $body['email'] ?? '');
-$phone = clean($body['phone'] ?? '');
+$phoneInput = clean($body['phone'] ?? '');
+$phone = normalizePhoneNumber($phoneInput);
 
-if (!$firstName || !$lastName || !$emailAddress || !$phone) {
+if (!$firstName || !$lastName || !$emailAddress || !$phoneInput) {
     respond(400, ['error' => 'First name, last name, email, and phone are required']);
 }
 
 if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
     respond(400, ['error' => 'Invalid email format']);
+}
+
+if ($phone === null) {
+    respond(400, ['error' => 'Enter a valid 10-digit phone number']);
 }
 
 try {

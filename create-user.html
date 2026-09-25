@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacts &mdash; Create User</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <main class="card card--form-page">
+    <div class="card__tab">Create User</div>
+    <div class="card__holes" aria-hidden="true">
+      <span class="hole"></span><span class="hole"></span><span class="hole"></span>
+    </div>
+
+    <p class="card__intro">Create a user account</p>
+
+    <form class="card__form" id="create-user-form">
+      <fieldset class="field field--role">
+        <div class="role-options">
+          <label class="role-option">Is Admin? <input type="checkbox" id="is-admin" name="isAdmin"></label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="first-name">First name</label>
+        <input type="text" id="first-name" name="firstName" autocomplete="given-name" required maxlength="50">
+      </div>
+
+      <div class="field">
+        <label for="last-name">Last name</label>
+        <input type="text" id="last-name" name="lastName" autocomplete="family-name" required maxlength="50">
+      </div>
+
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required maxlength="50">
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="new-password" required>
+      </div>
+
+      <div class="field">
+        <label for="confirm-password">Confirm password</label>
+        <input type="password" id="confirm-password" name="confirmPassword" autocomplete="new-password" required>
+      </div>
+
+      <button type="submit" class="card__submit">Create user</button>
+      <p id="create-user-message" class="form-message" aria-live="polite"></p>
+      <a class="card__forgot" href="admin.html">Cancel</a>
+    </form>
+  </main>
+
+  <script src="js/create-user.js"></script>
+</body>
+</html>

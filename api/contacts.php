@@ -26,13 +26,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $emailAddress = isset($body['emailAddress']) && is_string($body['emailAddress'])
         ? trim($body['emailAddress'])
         : '';
-    $phone = isset($body['phone']) && is_string($body['phone'])
+    $phoneInput = isset($body['phone']) && is_string($body['phone'])
         ? trim($body['phone'])
         : '';
+    $phone = normalizePhoneNumber($phoneInput);
 
-    if (!$firstName || !$lastName || !$emailAddress || !$phone) {
+    if (!$firstName || !$lastName || !$emailAddress || !$phoneInput) {
         respond(400, [
             'error' => 'First name, last name, email address, and phone number are required'
+        ]);
+    }
+
+    if ($phone === null) {
+        respond(400, [
+            'error' => 'Enter a valid 10-digit phone number'
         ]);
     }
 
