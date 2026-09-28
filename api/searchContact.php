@@ -24,6 +24,25 @@ if ($method === 'POST') {
 
     $allowedCategories = ['Family', 'Friends', 'Work', 'School'];
 
+    $hasFavoriteFilter = array_key_exists('favorite', $body);
+
+    $favorite = null;
+
+    if ($hasFavoriteFilter) {
+
+        $favorite = filter_var(
+            $body['favorite'],
+            FILTER_VALIDATE_BOOLEAN,
+            FILTER_NULL_ON_FAILURE
+        );
+
+        if ($favorite === null) {
+            respond(400, [
+                'error' => 'Invalid favorite value'
+            ]);
+        }
+    }
+
 
     if ($category !== '' && !in_array($category, $allowedCategories, true)) {
         respond(400, [
@@ -31,15 +50,35 @@ if ($method === 'POST') {
         ]);
     }
 
-    if ($searchTerm === '' && $category === '') {
+    if ($searchTerm === '' && $category === '' && !$hasFavoriteFilter) {
         respond(400, [
-            'error' => 'Search term or category is required'
+            'error' => 'Search term or filter is required'
         ]);
     }
 
+    $sortBy = isset($body['sortBy']) ? clean($body['sortBy']) : 'firstName';
+
+    $sortOrder = isset($body['sortOrder']) ? strtoupper(clean($body['sortOrder'])) : 'ASC';
+
+    $allowedSortBy = ['firstName' => 'FirstName', 'lastName' => 'LastName', 'dateAdded' => 'DateAdded'];
+
+    if (!isset($allowedSortBy[$sortBy])) {
+        respond(400, [
+            'error' => 'Invalid sortBy value'
+        ]);
+    }
+
+    if ($sortOrder !== 'ASC' && $sortOrder !== 'DESC') {
+        respond(400, [
+            'error' => 'Invalid sortOrder value'
+        ]);
+    }
+
+    $sortColumn = $allowedSortBy[$sortBy];
+
     try {
 
-        $sql = 'SELECT ID as contactId, FirstName as firstName, LastName as lastName, Email as email, Phone as phone, Category as category, Favorite as favorite
+        $sql = 'SELECT ID as contactId, FirstName as firstName, LastName as lastName, Email as email, Phone as phone, Category as category, Favorite as favorite, DateAdded as dateAdded
                 FROM Contacts
                 WHERE UserID = :userId';
 
@@ -64,9 +103,14 @@ if ($method === 'POST') {
             $params[':category'] = $category;
         }
 
-        $stmt = $db->prepare(
-            $sql
-        );
+        if ($hasFavoriteFilter) {
+        $sql .= ' AND Favorite = :favorite';
+        $params[':favorite'] = $favorite ? 1 : 0;
+     }
+
+        $sql .= " ORDER BY {$sortColumn} {$sortOrder}";
+
+        $stmt = $db->prepare($sql);
 
         $stmt->execute($params);
 
