@@ -11,7 +11,7 @@ if (!isset($_SERVER['REQUEST_METHOD'])) {
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$userId = requireAuth();
+$userId = requireActiveAuth();
 $db = getDB();
 
 if ($method === 'POST') {
@@ -60,7 +60,7 @@ if ($method === 'POST') {
 
     $sortOrder = isset($body['sortOrder']) ? strtoupper(clean($body['sortOrder'])) : 'ASC';
 
-    $allowedSortBy = ['firstName' => 'FirstName', 'lastName' => 'LastName', 'dateAdded' => 'DateAdded'];
+    $allowedSortBy = ['firstName' => 'FirstName', 'lastName' => 'LastName', 'dateAdded' => 'DateCreated'];
 
     if (!isset($allowedSortBy[$sortBy])) {
         respond(400, [
@@ -78,7 +78,7 @@ if ($method === 'POST') {
 
     try {
 
-        $sql = 'SELECT ID as contactId, FirstName as firstName, LastName as lastName, Email as email, Phone as phone, Category as category, Favorite as favorite, DateAdded as dateAdded
+        $sql = 'SELECT ID as contactId, FirstName as firstName, LastName as lastName, EmailAddress as emailAddress, Phone as phone, Category as category, Favorite as favorite, DateCreated as dateAdded, DateUpdated as dateUpdated
                 FROM Contacts
                 WHERE UserID = :userId';
 
@@ -88,7 +88,7 @@ if ($method === 'POST') {
 
             $search = '%' . $searchTerm . '%';
 
-            $sql .= ' AND (FirstName LIKE :searchFirstName OR LastName LIKE :searchLastName OR Email LIKE :searchEmail OR Phone LIKE :searchPhone)';
+            $sql .= ' AND (FirstName LIKE :searchFirstName OR LastName LIKE :searchLastName OR EmailAddress LIKE :searchEmail OR Phone LIKE :searchPhone)';
 
             $params[':searchFirstName'] = $search;
             $params[':searchLastName'] = $search;

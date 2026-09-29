@@ -43,7 +43,7 @@ createContactForm.addEventListener('submit', async (event) => {
   submitButton.textContent = 'Saving contact...';
 
   try {
-    const response = await fetch('api/contacts.php', {
+    const response = await fetch('api/addContact.php', {
       method: 'POST',
       credentials: 'same-origin',
       headers: {
@@ -54,7 +54,9 @@ createContactForm.addEventListener('submit', async (event) => {
         firstName: formData.get('firstName'),
         lastName: formData.get('lastName'),
         emailAddress: formData.get('emailAddress'),
-        phone: normalizedPhone
+        phone: normalizedPhone,
+        category: formData.get('category'),
+        favorite: formData.has('favorite')
       })
     });
 

@@ -28,10 +28,43 @@
     <section aria-labelledby="contacts-heading">
       <h2 id="contacts-heading" class="sr-only">My contacts</h2>
       <form id="contact-search-form" class="contacts-search" role="search">
-        <label class="sr-only" for="contact-search">Search contacts</label>
-        <input id="contact-search" name="search" type="search" placeholder="Search name, email, or phone" autocomplete="off">
-        <button type="submit" class="button button--small">Search</button>
-        <button type="button" id="clear-search-button" class="button button--small button--secondary">Clear</button>
+        <div class="contacts-search__field contacts-search__field--query">
+          <label class="sr-only" for="contact-search">Search contacts</label>
+          <input id="contact-search" name="search" type="search" placeholder="Search name, email, or phone" autocomplete="off">
+        </div>
+        <div class="contacts-search__field">
+          <label for="contact-category">Category</label>
+          <select id="contact-category" name="category">
+            <option value="">All categories</option>
+            <option value="Family">Family</option>
+            <option value="Friends">Friends</option>
+            <option value="Work">Work</option>
+            <option value="School">School</option>
+          </select>
+        </div>
+        <label class="contacts-search__checkbox" for="favorites-only">
+          <input id="favorites-only" name="favoritesOnly" type="checkbox">
+          Favorites only
+        </label>
+        <div class="contacts-search__field">
+          <label for="contact-sort">Sort by</label>
+          <select id="contact-sort" name="sortBy">
+            <option value="firstName">First name</option>
+            <option value="lastName">Last name</option>
+            <option value="dateAdded">Date created</option>
+          </select>
+        </div>
+        <div class="contacts-search__field">
+          <label for="contact-sort-order">Order</label>
+          <select id="contact-sort-order" name="sortOrder">
+            <option value="ASC">Ascending</option>
+            <option value="DESC">Descending</option>
+          </select>
+        </div>
+        <div class="contacts-search__actions">
+          <button type="submit" class="button button--small">Search</button>
+          <button type="button" id="clear-search-button" class="button button--small button--secondary">Clear</button>
+        </div>
       </form>
       <div class="table-wrap">
         <table class="data-table">
@@ -71,6 +104,20 @@
         <label for="edit-phone">Phone number</label>
         <input type="tel" id="edit-phone" name="phone" autocomplete="tel" inputmode="tel" required maxlength="25" pattern="[0-9+(). -]+" title="Enter a valid 10-digit phone number.">
       </div>
+      <div class="field">
+        <label for="edit-category">Category</label>
+        <select id="edit-category" name="category">
+          <option value="">No category</option>
+          <option value="Family">Family</option>
+          <option value="Friends">Friends</option>
+          <option value="Work">Work</option>
+          <option value="School">School</option>
+        </select>
+      </div>
+      <label class="field-checkbox" for="edit-favorite">
+        <input type="checkbox" id="edit-favorite" name="favorite">
+        Add to favorites
+      </label>
 
       <p id="edit-contact-message" class="form-message" aria-live="polite"></p>
       <div class="dialog-actions">

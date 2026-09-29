@@ -40,6 +40,22 @@
         <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" required maxlength="25" pattern="[0-9+(). -]+" title="Enter a valid 10-digit phone number.">
       </div>
 
+      <div class="field">
+        <label for="category">Category</label>
+        <select id="category" name="category">
+          <option value="">No category</option>
+          <option value="Family">Family</option>
+          <option value="Friends">Friends</option>
+          <option value="Work">Work</option>
+          <option value="School">School</option>
+        </select>
+      </div>
+
+      <label class="field-checkbox" for="favorite">
+        <input type="checkbox" id="favorite" name="favorite">
+        Add to favorites
+      </label>
+
       <button type="submit" class="card__submit">Save contact</button>
       <p id="create-contact-message" class="form-message" aria-live="polite"></p>
       <a class="card__forgot" href="user.html">Cancel</a>

@@ -3,6 +3,10 @@ const contactsMessage = document.getElementById('contacts-message');
 const signOutButton = document.getElementById('sign-out-button');
 const contactSearchForm = document.getElementById('contact-search-form');
 const contactSearchInput = document.getElementById('contact-search');
+const contactCategoryInput = document.getElementById('contact-category');
+const favoritesOnlyInput = document.getElementById('favorites-only');
+const contactSortInput = document.getElementById('contact-sort');
+const contactSortOrderInput = document.getElementById('contact-sort-order');
 const clearSearchButton = document.getElementById('clear-search-button');
 const editContactDialog = document.getElementById('edit-contact-dialog');
 const editContactForm = document.getElementById('edit-contact-form');
@@ -34,7 +38,41 @@ function formatPhone(value) {
     : value || '';
 }
 
+function normalizeContact(contact) {
+  return {
+    ID: contact.ID ?? contact.contactId,
+    FirstName: contact.FirstName ?? contact.firstName,
+    LastName: contact.LastName ?? contact.lastName,
+    EmailAddress: contact.EmailAddress ?? contact.emailAddress ?? contact.email,
+    Phone: contact.Phone ?? contact.phone,
+    DateCreated: contact.DateCreated ?? contact.dateAdded,
+    DateUpdated: contact.DateUpdated ?? contact.dateUpdated,
+    Category: contact.Category ?? contact.category,
+    Favorite: contact.Favorite ?? contact.favorite
+  };
+}
+
+function sortContacts(contacts) {
+  const field = contactSortInput.value;
+  const direction = contactSortOrderInput.value === 'DESC' ? -1 : 1;
+  const property = {
+    firstName: 'FirstName',
+    lastName: 'LastName',
+    dateAdded: 'DateCreated'
+  }[field];
+
+  return [...contacts].sort((a, b) => {
+    const first = a[property] || '';
+    const second = b[property] || '';
+    return String(first).localeCompare(String(second), undefined, {
+      numeric: field === 'dateAdded',
+      sensitivity: 'base'
+    }) * direction;
+  });
+}
+
 function renderContacts(contacts) {
+  contacts = contacts.map(normalizeContact);
   contactsBody.replaceChildren();
 
   if (contacts.length === 0) {
@@ -89,6 +127,8 @@ function openEditDialog(contact) {
   editContactForm.elements.lastName.value = contact.LastName || '';
   editContactForm.elements.emailAddress.value = contact.EmailAddress || '';
   editContactForm.elements.phone.value = contact.Phone || '';
+  editContactForm.elements.category.value = contact.Category || '';
+  editContactForm.elements.favorite.checked = contact.Favorite === true || String(contact.Favorite) === '1';
   editContactMessage.textContent = '';
   editContactMessage.className = 'form-message';
   editContactDialog.showModal();
@@ -123,7 +163,9 @@ editContactForm.addEventListener('submit', async (event) => {
         firstName: formData.get('firstName'),
         lastName: formData.get('lastName'),
         emailAddress: formData.get('emailAddress'),
-        phone: formData.get('phone')
+        phone: formData.get('phone'),
+        category: formData.get('category'),
+        favorite: formData.has('favorite')
       })
     });
     const result = await response.json();
@@ -135,9 +177,7 @@ editContactForm.addEventListener('submit', async (event) => {
     if (!response.ok) throw new Error(result.error || 'Unable to update contact.');
 
     closeEditDialog();
-    const searchTerm = contactSearchInput.value.trim();
-    if (searchTerm) await searchContacts(searchTerm);
-    else await loadContacts();
+    await refreshContacts();
     setMessage(result.message || 'Contact updated successfully.');
   } catch (error) {
     editContactMessage.textContent = error.message || 'Unable to update contact.';
@@ -210,7 +250,7 @@ async function loadContacts() {
       throw new Error(result.error || 'Unable to load contacts.');
     }
 
-    renderContacts(result.contacts);
+    renderContacts(sortContacts(result.contacts.map(normalizeContact)));
   } catch (error) {
     showTableMessage('Unable to load contacts.');
     contactsMessage.textContent = error.message || 'Unable to load contacts.';
@@ -218,7 +258,7 @@ async function loadContacts() {
   }
 }
 
-async function searchContacts(searchTerm) {
+async function searchContacts() {
   const submitButton = contactSearchForm.querySelector('button[type="submit"]');
   submitButton.disabled = true;
   submitButton.textContent = 'Searching...';
@@ -231,7 +271,13 @@ async function searchContacts(searchTerm) {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ searchTerm })
+      body: JSON.stringify({
+        searchTerm: contactSearchInput.value.trim(),
+        ...(contactCategoryInput.value && { category: contactCategoryInput.value }),
+        ...(favoritesOnlyInput.checked && { favorite: true }),
+        sortBy: contactSortInput.value,
+        sortOrder: contactSortOrderInput.value
+      })
     });
     const result = await response.json();
 
@@ -252,22 +298,32 @@ async function searchContacts(searchTerm) {
   }
 }
 
-contactSearchForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const searchTerm = contactSearchInput.value.trim();
-
+async function refreshContacts() {
   contactsMessage.textContent = '';
   contactsMessage.className = 'form-message';
-  if (!searchTerm) {
+  if (!contactSearchInput.value.trim() && !contactCategoryInput.value && !favoritesOnlyInput.checked) {
     await loadContacts();
     return;
   }
 
-  await searchContacts(searchTerm);
+  await searchContacts();
+}
+
+contactSearchForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  await refreshContacts();
+});
+
+[contactCategoryInput, favoritesOnlyInput, contactSortInput, contactSortOrderInput].forEach((control) => {
+  control.addEventListener('change', () => contactSearchForm.requestSubmit());
 });
 
 clearSearchButton.addEventListener('click', () => {
   contactSearchInput.value = '';
+  contactCategoryInput.value = '';
+  favoritesOnlyInput.checked = false;
+  contactSortInput.value = 'firstName';
+  contactSortOrderInput.value = 'ASC';
   contactsMessage.textContent = '';
   contactsMessage.className = 'form-message';
   loadContacts();

@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 try {
     $stmt = $db->prepare(
-        'SELECT ID, FirstName, LastName, EmailAddress, Phone, DateCreated, DateUpdated
+        'SELECT ID, FirstName, LastName, EmailAddress, Phone, Category, Favorite, DateCreated, DateUpdated
          FROM Contacts
          WHERE UserID = :userId
          ORDER BY LastName ASC, FirstName ASC, ID ASC'

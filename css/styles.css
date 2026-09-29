@@ -112,7 +112,8 @@ body {
   margin-bottom: 8px;
 }
 
-.field input {
+.field input,
+.field select {
   width: 100%;
   border: none;
   border-bottom: 1px solid var(--rule);
@@ -151,11 +152,13 @@ body {
 .role-option { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); }
 .role-option input { width: auto; margin: 0; padding: 0; accent-color: var(--clay); }
 
-.field input:focus {
+.field input:focus,
+.field select:focus {
   border-bottom-color: var(--clay);
 }
 
-.field input:focus-visible {
+.field input:focus-visible,
+.field select:focus-visible {
   outline: 2px solid var(--clay);
 }
 
@@ -193,6 +196,17 @@ body {
   color: var(--clay);
   text-decoration: underline;
 }
+
+.field-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: -8px 0 24px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.field-checkbox input { margin: 0; accent-color: var(--clay); }
 
 .form-message {
   min-height: 18px;
@@ -335,14 +349,27 @@ body {
 
 .contacts-search {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  flex-wrap: wrap;
   gap: 8px;
   margin: 0 0 20px;
 }
 
-.contacts-search input {
+.contacts-search__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+.contacts-search__field--query {
+  flex: 1 1 200px;
+}
+
+.contacts-search input[type="search"],
+.contacts-search select {
   min-width: 0;
-  flex: 1;
   border: 1px solid var(--rule);
   border-radius: 3px;
   background: transparent;
@@ -352,10 +379,26 @@ body {
   color: var(--ink);
 }
 
-.contacts-search input:focus-visible {
+.contacts-search input[type="search"] { width: 100%; }
+
+.contacts-search input:focus-visible,
+.contacts-search select:focus-visible {
   outline: 2px solid var(--teal);
   outline-offset: 2px;
 }
+
+.contacts-search__checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 17px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.contacts-search__checkbox input { accent-color: var(--clay); }
+.contacts-search__actions { display: flex; gap: 8px; margin-top: 17px; }
 
 .data-table {
   width: 100%;
