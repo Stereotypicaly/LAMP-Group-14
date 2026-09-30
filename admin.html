@@ -25,6 +25,43 @@
       </div>
     </header>
 
+    <section class="admin-search-section">
+
+      <form id="admin-search-form">
+
+        <label
+          for="admin-search"
+          class="sr-only"
+        >
+          Search users or contacts
+        </label>
+
+        <input
+          id="admin-search"
+          name="searchTerm"
+          type="search"
+          placeholder="Search users or contacts..."
+        >
+
+        <button
+          type="submit"
+          class="button"
+        >
+          Search
+        </button>
+
+        <button
+          type="button"
+          id="clear-search"
+          class="button button--secondary"
+        >
+          Clear
+        </button>
+
+      </form>
+
+    </section>
+
     <section aria-labelledby="users-heading">
       <h2 id="users-heading" class="sr-only">Registered users</h2>
       <div class="table-wrap">
@@ -32,11 +69,11 @@
           <thead>
             <tr>
               <th scope="col">ID</th><th scope="col">First name</th><th scope="col">Last name</th>
-              <th scope="col">Username</th><th scope="col">Created</th><th scope="col">Updated</th><th scope="col">Actions</th>
+              <th scope="col">Username</th><th scope="col">Created</th><th scope="col">Updated</th><th scope="col">Contacts</th><th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td colspan="7">Loading users...</td></tr>
+            <tr><td colspan="8">Loading users...</td></tr>
           </tbody>
         </table>
         <p id="users-message" class="form-message" aria-live="polite"></p>
