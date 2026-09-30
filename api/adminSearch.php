@@ -10,11 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 requireAdmin();
-$searchTerm = clean(getRequestBody()['searchTerm'] ?? '');
 
-if (!$searchTerm) {
-    respond(400, ['error' => 'Search term is required']);
-}
+$body = getRequestBody();
+
+$searchTerm = clean($body['searchTerm'] ?? '');
 
 try {
     $search = '%' . $searchTerm . '%';
