@@ -20,6 +20,8 @@ try {
     $stmt = getDB()->prepare(
         'SELECT Users.ID AS userId, Users.Username AS username,
                 Users.FirstName AS userFirstName, Users.LastName AS userLastName,
+                Users.DateCreated AS dateCreated,
+                Users.DateUpdated AS dateUpdated,
                 CASE WHEN Users.IsDisabled = 1 THEN 0 ELSE 1 END AS isEnabled,
                 Users.IsAdmin AS isAdmin, Contacts.ID AS contactId,
                 Contacts.FirstName AS contactFirstName, Contacts.LastName AS contactLastName,
