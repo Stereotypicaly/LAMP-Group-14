@@ -45,7 +45,7 @@ try {
         ':emailSearch' => $search,
         ':phoneSearch' => $search
     ]);
-    respond(200, ['results' => $stmt->fetchAll()]);
+    respond(200, ['results' => $stmt->fetchAll(), 'currentUserId' => $_SESSION['userId'] ?? null]);
 } catch (PDOException $e) {
     respond(500, ['error' => 'Database error']);
 }
