@@ -6,6 +6,9 @@ const resetForm = document.getElementById('reset-password-form');
 const resetUserLabel = document.getElementById('reset-password-user');
 const newPasswordInput = document.getElementById('new-password');
 const cancelResetButton = document.getElementById('cancel-reset-button');
+const searchForm = document.getElementById('admin-search-form');
+const searchInput = document.getElementById('admin-search');
+const clearSearchButton = document.getElementById('clear-search');
 
 let resetUserId = null;
 
@@ -13,7 +16,7 @@ function showTableMessage(message) {
   usersBody.replaceChildren();
   const row = document.createElement('tr');
   const cell = document.createElement('td');
-  cell.colSpan = 7;
+  cell.colSpan = 8;
   cell.textContent = message;
   row.append(cell);
   usersBody.append(row);
@@ -37,6 +40,44 @@ function createButton(label, className, handler) {
   return button;
 }
 
+function groupResults(results) {
+  const users = new Map();
+
+  results.forEach((result) => {
+    const userId = Number(result.userId);
+    if (!users.has(userId)) {
+      users.set(userId, {
+        ID: userId,
+        FirstName: result.userFirstName,
+        LastName: result.userLastName,
+        Username: result.username,
+        DateCreated: result.dateCreated,
+        DateUpdated: result.dateUpdated,
+
+        IsDisabled:
+          Number(result.isEnabled) === 1 ? 0 : 1,
+
+        IsAdmin:
+          Number(result.isAdmin),
+
+        contacts: []
+      });
+    }
+
+    if (result.contactId !== null) {
+      users.get(userId).contacts.push({
+        ID: Number(result.contactId),
+        FirstName: result.contactFirstName,
+        LastName: result.contactLastName,
+        Email: result.email,
+        Phone: result.phone
+      });
+    }
+
+  });
+  return Array.from(users.values());
+}
+
 function renderUsers(users, currentUserId) {
   usersBody.replaceChildren();
 
@@ -54,11 +95,34 @@ function renderUsers(users, currentUserId) {
         row.append(cell);
       });
 
+    const contactsCell = document.createElement('td');
+    if (!user.contacts || user.contacts.length === 0) {
+      contactsCell.textContent = 'No contacts';
+    } else {
+      const details = document.createElement('details');
+      const summary = document.createElement('summary');
+      summary.textContent =
+        `View contacts (${user.contacts.length})`;
+      details.append(summary);
+      user.contacts.forEach((contact) => {
+        const contactInfo =
+          document.createElement('div');
+        contactInfo.className = 'admin-contact';
+        const name =
+          `${contact.FirstName ?? ''} ${contact.LastName ?? ''}`.trim();
+        contactInfo.textContent =
+          `${name} — ${contact.Email ?? ''} — ${contact.Phone ?? ''}`;
+        details.append(contactInfo);
+      });
+      contactsCell.append(details);
+    }
+    row.append(contactsCell);
+    
     const actions = document.createElement('td');
     actions.className = 'table-actions';
     const resetButton = createButton('Reset password', 'button button--small', () => openResetDialog(user));
     actions.append(resetButton);
-
+    
     if (Number(user.ID) === Number(currentUserId)) {
       const currentAccount = document.createElement('span');
       currentAccount.className = 'account-status';
@@ -98,13 +162,30 @@ async function request(url, body) {
   return result;
 }
 
-async function loadUsers() {
+async function loadUsers(searchTerm = '') {
   try {
-    const result = await request('api/adminUsers.php');
-    if (result) renderUsers(result.users, result.currentUserId);
+    const result = await request(
+      'api/adminSearch.php',
+      {
+        searchTerm: searchTerm
+      }
+    );
+    if (!result) return;
+    const users =
+      groupResults(result.results);
+    renderUsers(
+      users,
+      result.currentUserId
+    );
   } catch (error) {
-    showTableMessage('Unable to load users.');
-    setMessage(error.message || 'Unable to load users.', true);
+    showTableMessage(
+      'Unable to load users.'
+    );
+    setMessage(
+      error.message ||
+        'Unable to load users.',
+      true
+    );
   }
 }
 
@@ -186,5 +267,26 @@ signOutButton.addEventListener('click', async () => {
     window.location.replace('index.html');
   }
 });
+
+searchForm.addEventListener(
+  'submit',
+  async (event) => {
+    event.preventDefault();
+    const searchTerm =
+      searchInput.value.trim();
+    await loadUsers(
+      searchTerm
+    );
+  }
+);
+
+clearSearchButton.addEventListener(
+  'click',
+  async () => {
+    searchInput.value = '';
+    await loadUsers('');
+  }
+);
+
 
 loadUsers();
